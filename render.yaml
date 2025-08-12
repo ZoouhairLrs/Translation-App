@@ -3,7 +3,6 @@ services:
     name: translation-backend
     env: python
     plan: free
-    buildCommand: "cd backend && chmod +x build.sh && ./build.sh"
     startCommand: "cd backend && gunicorn translation_project.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
