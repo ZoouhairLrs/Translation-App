@@ -4,7 +4,7 @@ services:
     env: python
     plan: free
     rootDir: backend
-    buildCommand: "./build.sh"
+    buildCommand: "chmod +x build.sh && ./build.sh"
     startCommand: "gunicorn translation_project.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
