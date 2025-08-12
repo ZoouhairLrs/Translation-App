@@ -3,4 +3,4 @@ services:
     name: translation-backend
     env: python
     plan: free
-    startCommand: "cd backend && gunicorn translation_project.wsgi:application"
+    startCommand: "./start.sh"
