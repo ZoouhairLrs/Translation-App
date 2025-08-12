@@ -67,6 +67,9 @@ WSGI_APPLICATION = 'translation_project.wsgi.application'
 # Database - Not required for this project
 DATABASES = {}
 
+# Disable migrations for this app (no database needed)
+MIGRATION_MODULES = {}
+
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {

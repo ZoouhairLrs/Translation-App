@@ -19,7 +19,7 @@ pip install -r requirements.txt
 echo "Collecting static files..."
 python manage.py collectstatic --no-input
 
-echo "Running migrations..."
-python manage.py migrate
+echo "Skipping migrations (no database needed for this app)..."
+# python manage.py migrate
 
 echo "Build completed successfully!"
