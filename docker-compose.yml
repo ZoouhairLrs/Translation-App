@@ -1,0 +1,23 @@
+services:
+  libretranslate:
+    image: libretranslate/libretranslate:latest
+    container_name: libretranslate
+    ports:
+      - "5000:5000"
+    environment:
+      - LIBRETRANSLATE_API_KEY=
+      - LIBRETRANSLATE_UPDATE_MODELS=false
+      - LIBRETRANSLATE_LOAD_ONLY=en,fr,ar
+      - LIBRETRANSLATE_DEBUG=false
+    restart: unless-stopped
+    volumes:
+      - libretranslate_data:/app/models
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  libretranslate_data:
