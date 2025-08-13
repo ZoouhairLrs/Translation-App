@@ -11,7 +11,7 @@ A modern, responsive translation application built with Django REST API backend 
 
 ### ⏱️ How long did you spend on the assignment?
 
-**Total Development Time: Approximately 3-4 hours**
+**Total Development Time: Approximately ~3-6 hours**
 
 - **Frontend Development**: ~1 hour (React components, Tailwind CSS styling)
 - **Backend Development**: ~1 hour (Django REST API, endpoints)

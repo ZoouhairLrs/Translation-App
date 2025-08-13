@@ -90,7 +90,7 @@ def translate_text(request):
             
             # Make the request
             response = requests.get(url, params=params, headers=headers, timeout=30)
-            
+
             if response.status_code != 200:
                 logger.error(f"Google Translate error: {response.status_code}")
                 return Response(
