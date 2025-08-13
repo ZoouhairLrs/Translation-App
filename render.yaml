@@ -3,8 +3,9 @@ services:
     name: translation-backend
     env: python
     plan: free
+    rootDir: backend
     buildCommand: "./build.sh"
-    startCommand: "gunicorn translation_project.wsgi:application"
+    startCommand: "./start.sh"
     envVars:
       - key: PYTHON_VERSION
         value: "3.9.16"
