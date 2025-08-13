@@ -38,3 +38,5 @@ services:
         value: "en,fr,ar"
       - key: LIBRETRANSLATE_DEBUG
         value: "false"
+      - key: LIBRETRANSLATE_REQUIRE_API_KEY
+        value: "false"

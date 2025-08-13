@@ -64,18 +64,19 @@ def translate_text(request):
                 status=status.HTTP_200_OK
             )
         
-        # Prepare payload for LibreTranslate API
-        payload = {
-            'q': text,
-            'source': source,
-            'target': target,
-            'format': 'text'
-        }
+        # Prepare parameters for LibreTranslate API
+        # Note: Using GET request to avoid API key requirement
         
         try:
             api_url = f"{settings.LIBRETRANSLATE_API_URL}/translate"
-            headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
-            response = requests.post(api_url, json=payload, headers=headers, timeout=30)
+            params = {
+                'q': text,
+                'source': source,
+                'target': target,
+                'format': 'text'
+            }
+            headers = {'Accept': 'application/json'}
+            response = requests.get(api_url, params=params, headers=headers, timeout=30)
 
             if response.status_code != 200:
                 try:
