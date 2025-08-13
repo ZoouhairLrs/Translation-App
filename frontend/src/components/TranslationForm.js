@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import config from '../config';
 
 const TranslationForm = ({ onSubmit, isLoading }) => {
   const [formData, setFormData] = useState({
@@ -21,12 +22,6 @@ const TranslationForm = ({ onSubmit, isLoading }) => {
       [name]: value
     }));
   };
-
-  const languages = [
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'fr', name: 'French', flag: '🇫🇷' },
-    { code: 'ar', name: 'Arabic', flag: '🇸🇦' }
-  ];
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -66,7 +61,7 @@ const TranslationForm = ({ onSubmit, isLoading }) => {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             disabled={isLoading}
           >
-            {languages.map(lang => (
+            {config.LANGUAGES.map(lang => (
               <option key={lang.code} value={lang.code}>
                 {lang.flag} {lang.name}
               </option>
@@ -87,7 +82,7 @@ const TranslationForm = ({ onSubmit, isLoading }) => {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             disabled={isLoading}
           >
-            {languages.map(lang => (
+            {config.LANGUAGES.map(lang => (
               <option key={lang.code} value={lang.code}>
                 {lang.flag} {lang.name}
               </option>

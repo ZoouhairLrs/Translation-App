@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import TranslationForm from './components/TranslationForm';
 import TranslationResult from './components/TranslationResult';
+import config from './config';
 import './App.css';
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
     setTranslationData(null);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/translate/`, {
+      const response = await fetch(`${config.API_URL}/api/translate/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

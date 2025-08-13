@@ -112,12 +112,11 @@ REST_FRAMEWORK = {
 }
 
 # CORS settings
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000').split(',')
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000,https://translation-app-one-fawn.vercel.app,https://translation-app-git-main-zoouhairlrs-projects.vercel.app,https://translation-cx6dn3zmf-zoouhairlrs-projects.vercel.app').split(',')
 
-# Additional CORS settings for development
-if DEBUG:
-    CORS_ALLOW_ALL_ORIGINS = True
-    CORS_ALLOW_CREDENTIALS = True
+# Additional CORS settings for production
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
 # LibreTranslate API configuration
 LIBRETRANSLATE_API_URL = os.getenv('LIBRETRANSLATE_API_URL', 'https://libretranslate.com')
