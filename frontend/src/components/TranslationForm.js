@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import config from '../config';
 
 const TranslationForm = ({ onSubmit, isLoading }) => {
@@ -7,6 +7,52 @@ const TranslationForm = ({ onSubmit, isLoading }) => {
     source: 'en',
     target: 'fr'
   });
+  
+  const [wordCount, setWordCount] = useState({ words: 0, chars: 0 });
+  const [isCounting, setIsCounting] = useState(false);
+
+  // Debounced word count API call
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (formData.text.trim()) {
+        getWordCount(formData.text);
+      } else {
+        setWordCount({ words: 0, chars: 0 });
+      }
+    }, 500); // Wait 500ms after user stops typing
+
+    return () => clearTimeout(timer);
+  }, [formData.text]);
+
+  const getWordCount = async (text) => {
+    if (!text.trim()) return;
+    
+    setIsCounting(true);
+    try {
+      const response = await fetch(`${config.API_URL}/api/word-count/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text.trim() })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setWordCount({ words: data.word_count, chars: data.char_count });
+      } else {
+        // Fallback to client-side calculation if API fails
+        const words = text.trim().split(/\s+/).filter(word => word.length > 0).length;
+        const chars = text.length;
+        setWordCount({ words, chars });
+      }
+    } catch (error) {
+      // Fallback to client-side calculation if API fails
+      const words = text.trim().split(/\s+/).filter(word => word.length > 0).length;
+      const chars = text.length;
+      setWordCount({ words, chars });
+    } finally {
+      setIsCounting(false);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,8 +87,46 @@ const TranslationForm = ({ onSubmit, isLoading }) => {
           required
           disabled={isLoading}
         />
-        <div className="mt-2 text-sm text-gray-500 text-right">
-          {formData.text.trim() ? `${formData.text.trim().split(/\s+/).filter(word => word.length > 0).length} words` : '0 words'}
+        
+        {/* Enhanced Word Count Display */}
+        <div className="mt-3 flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            {/* Word Count */}
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span className="text-sm font-medium text-gray-700">
+                {isCounting ? (
+                  <span className="text-gray-500">Counting...</span>
+                ) : (
+                  `${wordCount.words} word${wordCount.words !== 1 ? 's' : ''}`
+                )}
+              </span>
+            </div>
+            
+            {/* Character Count */}
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span className="text-sm font-medium text-gray-700">
+                {isCounting ? (
+                  <span className="text-gray-500">Counting...</span>
+                ) : (
+                  `${wordCount.chars} character${wordCount.chars !== 1 ? 's' : ''}`
+                )}
+              </span>
+            </div>
+          </div>
+          
+          {/* Text Length Indicator */}
+          {formData.text.length > 0 && (
+            <div className={`text-xs px-2 py-1 rounded-full ${
+              formData.text.length < 100 ? 'bg-green-100 text-green-800' :
+              formData.text.length < 500 ? 'bg-yellow-100 text-yellow-800' :
+              'bg-red-100 text-red-800'
+            }`}>
+              {formData.text.length < 100 ? 'Short' :
+               formData.text.length < 500 ? 'Medium' : 'Long'}
+            </div>
+          )}
         </div>
       </div>
 
