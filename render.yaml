@@ -3,9 +3,8 @@ services:
     name: translation-backend
     env: python
     plan: free
-    rootDir: backend
-    buildCommand: "./build.sh"
-    startCommand: "./start.sh"
+    buildCommand: "cd backend && pip install -r requirements.txt && python manage.py collectstatic --no-input"
+    startCommand: "gunicorn app:application"
     envVars:
       - key: PYTHON_VERSION
         value: "3.9.16"
