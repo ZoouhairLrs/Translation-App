@@ -1,0 +1,14 @@
+FROM libretranslate/libretranslate:latest
+
+# Set environment variables
+ENV LIBRETRANSLATE_API_KEY=""
+ENV LIBRETRANSLATE_UPDATE_MODELS=false
+ENV LIBRETRANSLATE_LOAD_ONLY=en,fr,ar
+ENV LIBRETRANSLATE_DEBUG=false
+
+# Expose port
+EXPOSE 10000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:10000/ || exit 1
