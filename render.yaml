@@ -3,4 +3,3 @@ services:
     name: translation-backend
     env: python
     plan: free
-    startCommand: "./start.sh"
