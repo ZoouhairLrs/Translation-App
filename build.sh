@@ -7,6 +7,9 @@ echo "Current directory: $(pwd)"
 echo "Listing files:"
 ls -la
 
+echo "Making startup script executable..."
+chmod +x startup.sh
+
 echo "Changing to backend directory..."
 cd backend
 
