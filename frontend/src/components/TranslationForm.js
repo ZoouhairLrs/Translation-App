@@ -112,6 +112,7 @@ const TranslationForm = ({ onSubmit, isLoading }) => {
                 ) : (
                   `${wordCount.chars} character${wordCount.chars !== 1 ? 's' : ''}`
                 )}
+                
               </span>
             </div>
           </div>
