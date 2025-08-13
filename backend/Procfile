@@ -1,1 +1,0 @@
-web: cd /opt/render/project/src/backend && gunicorn translation_project.wsgi:application --bind 0.0.0.0:$PORT

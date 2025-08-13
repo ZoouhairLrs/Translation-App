@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: translation-backend
-    env: python
-    plan: free
-    buildCommand: "./build.sh"
-    startCommand: "gunicorn wsgi:application"
