@@ -2,12 +2,13 @@
 Views for the translation app.
 """
 import logging
+import requests
+import json
 from django.conf import settings
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework import status
-from googletrans import Translator
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -62,40 +63,71 @@ def translate_text(request):
                     'word_count': len(text.split())
                 }, 
                 status=status.HTTP_200_OK
-            )
+                )
         
-        # Use Google Translate
+        # Use Google Translate via HTTP request
         try:
-            translator = Translator()
+            # Google Translate URL
+            url = "https://translate.googleapis.com/translate_a/single"
             
-            # Map our language codes to Google's format
-            lang_map = {
-                'en': 'en',
-                'fr': 'fr', 
-                'ar': 'ar'
+            # Parameters for the request
+            params = {
+                'client': 'gtx',
+                'sl': source,
+                'tl': target,
+                'dt': 't',
+                'q': text
             }
             
-            source_lang = lang_map.get(source, 'auto')
-            target_lang = lang_map.get(target, 'en')
+            # Headers to mimic a browser request
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.5',
+                'Accept-Encoding': 'gzip, deflate',
+                'Connection': 'keep-alive',
+            }
             
-            # Translate the text
-            result = translator.translate(text, src=source_lang, dest=target_lang)
-            translated_text = result.text
+            # Make the request
+            response = requests.get(url, params=params, headers=headers, timeout=30)
             
-            if not translated_text:
+            if response.status_code != 200:
+                logger.error(f"Google Translate error: {response.status_code}")
                 return Response(
-                    {'error': 'No translated text received from service'},
+                    {'error': 'Translation service unavailable. Please try again later.'},
+                    status=status.HTTP_503_SERVICE_UNAVAILABLE
+                )
+            
+            # Parse the response
+            try:
+                data_json = response.json()
+                # Google Translate returns a nested array, the first element contains the translations
+                if data_json and len(data_json) > 0 and len(data_json[0]) > 0:
+                    translated_text = data_json[0][0][0]
+                else:
+                    translated_text = ""
+                    
+                if not translated_text:
+                    return Response(
+                        {'error': 'No translated text received from service'},
+                        status=status.HTTP_502_BAD_GATEWAY
+                    )
+
+                return Response({
+                    'translated_text': translated_text,
+                    'original_text': text,
+                    'word_count': len(text.split())
+                }, status=status.HTTP_200_OK)
+                
+            except json.JSONDecodeError as e:
+                logger.error(f"Failed to parse Google Translate response: {e}")
+                return Response(
+                    {'error': 'Translation service response error. Please try again later.'},
                     status=status.HTTP_502_BAD_GATEWAY
                 )
 
-            return Response({
-                'translated_text': translated_text,
-                'original_text': text,
-                'word_count': len(text.split())
-            }, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            logger.error(f"Google Translate error: {str(e)}")
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Google Translate request error: {str(e)}")
             return Response(
                 {'error': 'Translation service unavailable. Please try again later.'},
                 status=status.HTTP_503_SERVICE_UNAVAILABLE
