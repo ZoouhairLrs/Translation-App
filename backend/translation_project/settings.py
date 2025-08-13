@@ -118,9 +118,6 @@ CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = False
 
-# LibreTranslate API configuration
-LIBRETRANSLATE_API_URL = os.getenv('LIBRETRANSLATE_API_URL', 'https://libretranslate.com')
-
 # Logging configuration
 LOGGING = {
     'version': 1,
